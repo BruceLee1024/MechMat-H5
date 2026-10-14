@@ -2,7 +2,7 @@ import React, { useId } from 'react';
 import { evaluateFoundation, FoundationParameters } from './model';
 import type { LessonId } from './lessons';
 
-const INK = '#153b35', ORANGE = '#d86a3b', MUTED = '#8e9b96';
+const INK = '#dcecff', ORANGE = '#ffc36c', MUTED = '#8ba6bf';
 export function SpecimenMark() {
   return <svg width="40" height="24" viewBox="0 0 56 30" aria-hidden="true"><path d="M2 3h10l8 6h16l8-6h10v24H44l-8-6H20l-8 6H2Z" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M2 3h10v24H2ZM44 3h10v24H44Z" fill="currentColor" /></svg>;
 }
@@ -21,10 +21,10 @@ function Arrow({ x1, x2, y, color = ORANGE }: { x1: number; x2: number; y: numbe
   return <g stroke={color} fill={color}><line x1={x1} x2={x2 - direction * 8} y1={y} y2={y} strokeWidth="4" /><path d={`M${x2} ${y}l${-direction * 11} -6v12Z`} stroke="none" /></g>;
 }
 function Dimension({ from, to, y, label }: { from: number; to: number; y: number; label: string }) {
-  return <g stroke="#60756e" fill="#60756e" strokeWidth="1"><line x1={from} x2={to} y1={y} y2={y} /><path d={`M${from + 5} ${y - 3}l-5 3 5 3m${to - from - 10} -6 5 3-5 3`} fill="none" /><line x1={from} x2={from} y1={y - 12} y2={y + 8} /><line x1={to} x2={to} y1={y - 12} y2={y + 8} /><text x={(from + to) / 2} y={y + 23} textAnchor="middle" fill={INK} stroke="none" fontSize="16">{label}</text></g>;
+  return <g stroke="#8ba6bf" fill="#8ba6bf" strokeWidth="1"><line x1={from} x2={to} y1={y} y2={y} /><path d={`M${from + 5} ${y - 3}l-5 3 5 3m${to - from - 10} -6 5 3-5 3`} fill="none" /><line x1={from} x2={from} y1={y - 12} y2={y + 8} /><line x1={to} x2={to} y1={y - 12} y2={y + 8} /><text x={(from + to) / 2} y={y + 23} textAnchor="middle" fill={INK} stroke="none" fontSize="16">{label}</text></g>;
 }
 
-export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: LessonId; parameters: FoundationParameters; ideal: boolean; cut: boolean }) {
+export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: Exclude<LessonId, 'forms' | 'compare'>; parameters: FoundationParameters; ideal: boolean; cut: boolean }) {
   const id = useId().replace(/:/g, '');
   const result = evaluateFoundation(parameters);
   const label = {
@@ -42,14 +42,14 @@ export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: 
   const dotGrid = (center: number, side: number) => [-1, 0, 1].flatMap(row => [-1, 0, 1].map(column => <g key={`${center}-${row}-${column}`} transform={`translate(${center + column * side * 0.3} ${99 + row * side * 0.3})`}><circle r="4" fill="none" stroke={ORANGE} strokeWidth="1.3" /><circle r="1.6" fill={ORANGE} /></g>));
   return <svg className={`foundation-diagram diagram-${lesson}`} viewBox={lesson === 'stress' ? '0 0 420 250' : '0 0 420 210'} role="img" aria-label={label}>
     <defs>
-      <linearGradient id={`${id}-metal`} x1="0" x2="0" y1="0" y2="1"><stop stopColor="#cbd1d0" /><stop offset=".25" stopColor="#e6e9e7" /><stop offset="1" stopColor="#a7b1ae" /></linearGradient>
+      <linearGradient id={`${id}-metal`} x1="0" x2="0" y1="0" y2="1"><stop stopColor="#496b85" /><stop offset=".25" stopColor="#688da9" /><stop offset="1" stopColor="#25435c" /></linearGradient>
       <clipPath id={`${id}-grain`}><circle cx="286" cy="49" r="35" /></clipPath>
       <pattern id={`${id}-texture`} width="24" height="20" patternUnits="userSpaceOnUse"><path d="M0 9 10 2 24 7M10 2 12 16 24 20M12 16 0 13" fill="none" stroke="#7c8c85" strokeWidth=".6" /></pattern>
     </defs>
     {lesson === 'model' && <>
       <path d="M65 105 78 92h280l-13 13Z" fill="#d5dcd8" stroke="#5c6c66" />
       <path d="M345 105 358 92v43l-13 14Z" fill="#85968d" stroke="#5c6c66" />
-      <rect x="65" y="105" width="280" height="44" fill={ideal ? '#c5d8ce' : `url(#${id}-metal)`} stroke={INK} strokeWidth="1.5" />
+      <rect x="65" y="105" width="280" height="44" fill={ideal ? '#254e69' : `url(#${id}-metal)`} stroke={INK} strokeWidth="1.5" />
       {!ideal && <rect x="65" y="105" width="280" height="44" fill={`url(#${id}-texture)`} opacity=".6" />}
       <Arrow x1={65} x2={17} y={126} /><Arrow x1={358} x2={405} y={126} />
       <text x="27" y="110" fill={ORANGE} fontSize="23" fontFamily="Georgia,serif" fontStyle="italic">F</text><text x="383" y="110" fill={ORANGE} fontSize="23" fontFamily="Georgia,serif" fontStyle="italic">F</text>
@@ -60,8 +60,8 @@ export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: 
       <Dimension from={65} to={345} y={169} label="L₀ = 200 mm" />
     </>}
     {lesson === 'force' && <>
-      <rect x={start} y="98" width={cut ? cutX - start : width} height="47" fill="#c5d8ce" stroke={INK} strokeWidth="1.5" />
-      {cut && <rect x={cutX + 15} y="98" width={end - cutX} height="47" fill="#c5d8ce" stroke={MUTED} opacity=".25" strokeDasharray="4 4" />}
+      <rect x={start} y="98" width={cut ? cutX - start : width} height="47" fill="#254e69" stroke={INK} strokeWidth="1.5" />
+      {cut && <rect x={cutX + 15} y="98" width={end - cutX} height="47" fill="#254e69" stroke={MUTED} opacity=".25" strokeDasharray="4 4" />}
       <Arrow x1={start} x2={20} y={122} />
       <text x="22" y="84" fill={ORANGE} fontSize="15">F = {parameters.forceKN.toFixed(1)} kN</text>
       {!cut && <Arrow x1={end} x2={396} y={122} />}
@@ -83,7 +83,7 @@ export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: 
     {lesson === 'strain' && <>
       <text x="210" y="27" textAnchor="middle" fill={INK} fontSize="15">{parameters.motion === 'translation' ? '两端一起移动，长度不变' : '右端相对左端移动，长度改变'}</text>
       <rect x={start} y="91" width={width} height="43" fill="none" stroke={MUTED} strokeDasharray="4 4" />
-      <rect x={start + shiftA} y="102" width={width + shiftB - shiftA} height="43" fill="#c5d8ce" fillOpacity=".75" stroke={INK} strokeWidth="1.5" />
+      <rect x={start + shiftA} y="102" width={width + shiftB - shiftA} height="43" fill="#254e69" fillOpacity=".75" stroke={INK} strokeWidth="1.5" />
       <line x1={start} x2={start} y1="78" y2="156" stroke={MUTED} strokeDasharray="3 4" /><line x1={end} x2={end} y1="78" y2="156" stroke={MUTED} strokeDasharray="3 4" />
       <text x={start + shiftA} y="75" textAnchor="middle" fill={INK} fontSize="14">A</text><text x={end + shiftB} y="75" textAnchor="middle" fill={INK} fontSize="14">B</text>
       <text x="210" y="123" textAnchor="middle" fill={INK} fontSize="15">ΔL = {result.extensionMM.toFixed(3)} mm</text>
@@ -92,7 +92,7 @@ export function FoundationDiagram({ lesson, parameters, ideal, cut }: { lesson: 
     {lesson === 'material' && <>
       <text x="210" y="28" textAnchor="middle" fill={INK} fontSize="15">同一应力下，E 决定伸长，ν 影响横向收缩</text>
       <rect x={start} y="84" width={width} height="46" fill="none" stroke={MUTED} strokeDasharray="4 4" />
-      <rect x={start - extension / 2} y={84 - contraction / 2} width={width + extension} height={46 + contraction} fill="#c5d8ce" stroke={INK} strokeWidth="1.5" />
+      <rect x={start - extension / 2} y={84 - contraction / 2} width={width + extension} height={46 + contraction} fill="#254e69" stroke={INK} strokeWidth="1.5" />
       <Arrow x1={start - extension / 2} x2={5} y={107} /><Arrow x1={end + extension / 2} x2={415} y={107} />
       <text x="210" y="67" textAnchor="middle" fill={INK} fontSize="15">纵向 ε = {(result.elasticStrain * 100).toFixed(4)}%</text>
       <text x="210" y="161" textAnchor="middle" fill={INK} fontSize="14">横向 εₜ = {(result.transverseStrain * 100).toFixed(4)}%</text>

@@ -1,5 +1,5 @@
 export const modules = [
-  { id: 'fundamentals', title: '基础概念', chapter: '01', description: '五个原创微实验：从建立模型，到看懂内力、应力、应变与材料刚度。', prompt: '先观察，再动手，最后用一个判断题检验理解。', component: 'FundamentalsModule', source: 'modules/FundamentalsModule.tsx', standalone: true },
+  { id: 'fundamentals', title: '基础概念', chapter: '01', description: '七节基础实验：基本假设、截面法、应力、位移应变、材料关系、基本变形与应力对照。', prompt: '先观察，再动手，最后用一个判断题检验理解。', component: 'FundamentalsModule', source: 'modules/FundamentalsModule.tsx', standalone: true },
   { id: 'axial', title: '轴向拉伸与压缩', chapter: '02', description: '改变轴力、面积和材料，观察正应力与轴向变形。', prompt: '增大轴力或截面面积，观察应力和伸长量如何变化。', component: 'AxialModule', source: 'modules/AxialModule.tsx' },
   { id: 'torsion', title: '圆轴扭转', chapter: '03', description: '观察扭矩、圆轴半径与剪应力、扭转角的关系。', prompt: '改变扭矩和圆轴半径，比较剪应力与扭转角的变化。', component: 'TorsionModule', source: 'modules/TorsionModule.tsx' },
   { id: 'bending', title: '梁的弯曲', chapter: '04', description: '移动集中力，观察剪力图、弯矩图与弯曲应力。', prompt: '移动载荷位置，再调整截面高度，观察内力与变形。', component: 'BendingModule', source: 'modules/BendingModule.tsx' },
