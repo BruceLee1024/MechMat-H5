@@ -15,7 +15,9 @@ const template = await readFile('index.html', 'utf8');
 try {
   for (const module of modules) {
     const render = module.id === 'solver' ? '<View model={props.solver} onModelChange={props.setSolver} />' : module.id === 'section' ? '<View model={props.section} onModelChange={props.setSection} />' : module.id === 'formulas' ? '<View />' : '<View state={props.state} onChange={props.onChange} />';
-    const entry = `import React from 'react';\nimport { mountResource } from './h5/H5Shell';\nimport { ${module.component} as View } from './${module.source}';\nmountResource(${JSON.stringify(module)}, props => ${render});\n`;
+    const entry = module.standalone
+      ? `import React from 'react';\nimport { mountStandalone } from './h5/Standalone';\nimport { ${module.component} as View } from './${module.source}';\nmountStandalone(${JSON.stringify(module)}, <View />);\n`
+      : `import React from 'react';\nimport { mountResource } from './h5/H5Shell';\nimport { ${module.component} as View } from './${module.source}';\nmountResource(${JSON.stringify(module)}, props => ${render});\n`;
     await writeFile('.h5-entry.tsx', entry);
     const outDir = `.h5-build/${module.id}`;
     const output = await build({ configFile: './vite.config.ts', logLevel: 'error', build: { outDir, emptyOutDir: true, write: false, rollupOptions: { input: path.resolve('.h5-entry.tsx'), output: { inlineDynamicImports: true } } } });

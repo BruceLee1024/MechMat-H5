@@ -4,6 +4,8 @@
 
 本仓库基于 [MechMat_Lab](https://github.com/BruceLee1024/MechMat_Lab) 的 `9d8abe9` 提取教学组件及计算代码，使用独立应用入口、构建流程、Git 历史和部署。后续改动只在本仓库中进行。
 
+基础概念已重写为“力学微实验”：建模、内力、应力、应变、材料五个连续实验，配备新的文案、SVG图示、图标、参数交互和判断题；设计与计算边界见 [基础模块设计说明](docs/design/foundation-design.md)。
+
 ## 在线资源
 
 [打开资源目录](https://brucelee1024.github.io/MechMat-H5/)。目录提供每个模块的在线入口、H5 上传包、1200px PNG 二维码、SVG 二维码和地址清单。
