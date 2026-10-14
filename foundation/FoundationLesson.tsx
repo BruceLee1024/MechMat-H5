@@ -131,8 +131,10 @@ export function FoundationLesson() {
           {lesson.id === 'force' && <p className="foundation-context">一般截面可有轴力 N、剪力 Q、扭矩 T 与弯矩 M。本节纯轴向受拉模型只有 N 非零。</p>}
           </div>
           <section className="foundation-knowledge" aria-label="基础要点"><h2>基础要点</h2><div className="knowledge-columns">{KNOWLEDGE[lesson.id].map(item => <div key={item.title}><h3>{item.title}</h3><p>{item.description}</p></div>)}</div></section>
-          <LessonQuiz lesson={lesson} selected={answers[step]} onSelect={chooseAnswer} />
         </div>
+      </div>
+      <div className="foundation-review">
+        <LessonQuiz lesson={lesson} selected={answers[step]} onSelect={chooseAnswer} />
       </div>
     </main>
     <footer className="foundation-footer"><p>{lesson.id === 'strain' && shearMode ? '简单剪切：原高 100 mm，顶面位移放大 10 倍；切应变数值由真实位移计算。' : lesson.scope}</p><button type="button" className="foundation-next" onClick={() => goTo((step + 1) % LESSONS.length)}>{lesson.next}<DirectionMark /></button></footer>
