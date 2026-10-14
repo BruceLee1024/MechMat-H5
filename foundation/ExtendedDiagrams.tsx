@@ -13,7 +13,7 @@ function Vector({ from, to, color = AMBER }: { from: [number, number]; to: [numb
 export function ModelDiagram({ ideal, assumption }: { ideal: boolean; assumption: number }) {
   const id = useId().replace(/:/g, '');
   const vertices = [[100, 140], [400, 215], [400, 285], [100, 210]];
-  return <svg className="foundation-diagram diagram-model" viewBox="0 0 520 360" role="img" aria-label="三维受拉试件，青色轮廓表示理想模型，琥珀色箭头表示相反方向的轴向拉力">
+  return <svg className="foundation-diagram diagram-model" viewBox="15 75 495 265" role="img" aria-label="三维受拉试件，青色轮廓表示理想模型，琥珀色箭头表示相反方向的轴向拉力">
     <defs><linearGradient id={`${id}-steel`} x2="1" y2="1"><stop stopColor="#657f95" stopOpacity=".7" /><stop offset="1" stopColor="#1c354c" stopOpacity=".85" /></linearGradient><filter id={`${id}-glow`}><feGaussianBlur stdDeviation="3" /></filter></defs>
     <path d="M100 140 125 120 425 195 400 215Z" fill="#47647d" fillOpacity=".8" stroke={CYAN} strokeWidth="1.4" />
     <path d="M400 215 425 195 425 265 400 285Z" fill="#214862" stroke={CYAN} strokeWidth="1.4" />
