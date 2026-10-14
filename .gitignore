@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.h5-build/
+.h5-entry.tsx
+*.log
+*.local
+.DS_Store
