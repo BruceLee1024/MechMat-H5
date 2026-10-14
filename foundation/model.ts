@@ -41,3 +41,22 @@ export function evaluateFoundation(parameters: FoundationParameters) {
   if (!Object.values(result).every(Number.isFinite)) throw new RangeError('参数量级超出可计算范围');
   return result;
 }
+
+/** 均匀简单剪切：顶面相对底面平移，工程切应变为位移梯度。 */
+export function evaluateSimpleShear(displacementMM: number, heightMM = 100) {
+  if (![displacementMM, heightMM].every(Number.isFinite) || heightMM <= 0) throw new RangeError('剪切位移须有限，原高须为正');
+  const gamma = displacementMM / heightMM;
+  if (!Number.isFinite(gamma)) throw new RangeError('剪切参数量级超出可计算范围');
+  return { gamma, angleDegrees: Math.atan(gamma) * 180 / Math.PI };
+}
+
+/** 与线弹性微实验分开：只用均匀拉伸、体积不变几何关系对照应力定义。 */
+export function evaluateStressComparison(forceKN: number, initialAreaMM2: number, engineeringStrain: number) {
+  if (![forceKN, initialAreaMM2, engineeringStrain].every(Number.isFinite) || forceKN < 0 || initialAreaMM2 <= 0 || engineeringStrain < 0) throw new RangeError('拉力、应变须非负且有限，原始面积须为正');
+  const stretch = 1 + engineeringStrain;
+  const areaMM2 = initialAreaMM2 / stretch;
+  const engineeringMPa = forceKN * 1000 / initialAreaMM2;
+  const trueMPa = forceKN * 1000 / areaMM2;
+  if (areaMM2 <= 0 || ![areaMM2, engineeringMPa, trueMPa].every(Number.isFinite)) throw new RangeError('应力对照参数量级超出可计算范围');
+  return { stretch, areaMM2, engineeringMPa, trueMPa };
+}

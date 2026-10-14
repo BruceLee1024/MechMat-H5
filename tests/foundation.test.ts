@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateFoundation, INITIAL_FOUNDATION } from '../foundation/model';
+import { evaluateFoundation, evaluateSimpleShear, evaluateStressComparison, INITIAL_FOUNDATION } from '../foundation/model';
 
 describe('教材基础微实验：单位与物理关系', () => {
   it('6kN 由100mm²承担，平均正应力为60MPa', () => {
@@ -38,5 +38,39 @@ describe('教材基础微实验：单位与物理关系', () => {
   });
   it.each([{ areaMM2: 0 }, { youngGPa: 0 }, { lengthMM: 0 }, { poisson: 0.5 }, { forceKN: NaN }, { cutPercent: 100 }])('拒绝无效模型 %j', invalid => {
     expect(() => evaluateFoundation({ ...INITIAL_FOUNDATION, ...invalid })).toThrow(RangeError);
+  });
+});
+
+describe('新增基础概念：剪切几何与应力定义', () => {
+  it('顶面位移5mm、原高100mm，切应变为0.05，实际角变为atan(0.05)', () => {
+    const result = evaluateSimpleShear(5);
+    expect(result.gamma).toBe(.05);
+    expect(result.angleDegrees).toBeCloseTo(2.862405, 5);
+  });
+  it('负向剪切改变符号，零位移没有切应变', () => {
+    expect(evaluateSimpleShear(-5).gamma).toBe(-.05);
+    expect(evaluateSimpleShear(0).angleDegrees).toBe(0);
+  });
+  it('均匀拉伸20%、体积不变，当前面积为原面积的1/1.2', () => {
+    const result = evaluateStressComparison(6, 100, .2);
+    expect(result.areaMM2).toBeCloseTo(100 / 1.2, 12);
+    expect(result.areaMM2 * 200 * result.stretch).toBeCloseTo(100 * 200, 9);
+    expect(result.engineeringMPa).toBe(60);
+    expect(result.trueMPa).toBeCloseTo(72, 12);
+  });
+  it('零伸长时两种应力定义一致，拉力加倍时两者都加倍', () => {
+    expect(evaluateStressComparison(6, 100, 0).trueMPa).toBe(60);
+    expect(evaluateStressComparison(12, 100, .2).trueMPa).toBeCloseTo(144, 12);
+  });
+  it('零拉力时两种应力均为零', () => {
+    expect(evaluateStressComparison(0, 100, .5)).toMatchObject({ engineeringMPa: 0, trueMPa: 0 });
+  });
+  it.each([[NaN, 100, .2], [6, 0, .2], [6, 100, -.1], [Number.MAX_VALUE, 1, .5]])('应力定义拒绝无效或溢出的输入 %j', (force, area, strain) => {
+    expect(() => evaluateStressComparison(force, area, strain)).toThrow(RangeError);
+  });
+  it('剪切高度为零、非有限位移或溢出梯度时拒绝计算', () => {
+    expect(() => evaluateSimpleShear(1, 0)).toThrow(RangeError);
+    expect(() => evaluateSimpleShear(Infinity)).toThrow(RangeError);
+    expect(() => evaluateSimpleShear(Number.MAX_VALUE, Number.MIN_VALUE)).toThrow(RangeError);
   });
 });

@@ -1,3 +1,5 @@
+> 本文件记录初版五步设计。当前七节设计见 [foundation-v2/design.md](foundation-v2/design.md)。
+
 # 基础模块：力学微实验
 
 ## 课程结构
