@@ -2,7 +2,8 @@ import React, { useEffect, useId, useState } from 'react';
 import { INITIAL_FOUNDATION, MATERIALS, evaluateFoundation, evaluateSimpleShear, evaluateStressComparison, type FoundationParameters } from './model';
 import { LESSONS } from './lessons';
 import { AnswerMark, DirectionMark, FoundationDiagram, ResetMark, SpecimenMark } from './diagrams';
-import { ASSUMPTIONS, DEFORMATION_FORMS, KNOWLEDGE, type DeformationForm } from './knowledge';
+import { DEFORMATION_FORMS, KNOWLEDGE, type DeformationForm } from './knowledge';
+import { AssumptionPanel, ModelObjectives } from './AssumptionPanel';
 import { AnimatedFormDiagram, ComparisonDiagram, ModelDiagram, ShearDiagram } from './ExtendedDiagrams';
 import './foundation.css';
 
@@ -118,7 +119,7 @@ export function FoundationLesson() {
         <div className="foundation-reading">
           <div className="foundation-heading"><h1>{lesson.id === 'model' ? '选择一个假设' : lesson.label}</h1>{lesson.id !== 'model' && <p>{lesson.description}</p>}</div>
           <div className="foundation-controls">
-          {lesson.id === 'model' && <><div className="assumption-options" role="group" aria-label="四个基本假设">{ASSUMPTIONS.map((item, index) => <button type="button" key={item.name} aria-pressed={assumption === index} onClick={() => setAssumption(index)}><AnswerMark selected={assumption === index} correct={true} /><span>{item.name}</span><span className="assumption-chevron" aria-hidden="true">›</span></button>)}</div><p className="assumption-description" role="status">{ASSUMPTIONS[assumption].description}</p><details className="foundation-detail"><summary>理解这个假设的边界</summary><p>{ASSUMPTIONS[assumption].detail}</p></details></>}
+          {lesson.id === 'model' && <AssumptionPanel value={assumption} onChange={setAssumption} />}
           {(lesson.id === 'force' || lesson.id === 'stress') && <Parameter label="拉力 F" value={parameters.forceKN} min={1} max={12} step={0.5} unit="kN" digits={1} onChange={forceKN => change({ forceKN })} />}
           {lesson.id === 'force' && <><Parameter label="截面位置 x" value={parameters.cutPercent} min={20} max={80} step={5} unit="% L₀" onChange={cutPercent => change({ cutPercent })} /><button type="button" className="foundation-cut-button" aria-pressed={cut} onClick={() => setCut(value => !value)}>{cut ? '合回试件' : '切开试件，显示内力'}</button><div className="foundation-equation"><span>N − F = 0</span><strong data-testid="foundation-section-force">N = {result.sectionForceKN.toFixed(1)} <small>kN</small></strong></div></>}
           {lesson.id === 'stress' && <><Parameter label="截面积 A" value={parameters.areaMM2} min={50} max={300} step={10} unit="mm²" onChange={areaMM2 => change({ areaMM2 })} /><div className="foundation-equation"><span>σ = <span className="math-fraction"><span>F</span><span>A</span></span> =</span><strong data-testid="foundation-stress">{result.stressMPa.toFixed(1)} <small>MPa</small></strong></div></>}
@@ -130,7 +131,7 @@ export function FoundationLesson() {
           {lesson.id !== 'model' && <p className="foundation-observation">{lesson.id === 'strain' && shearMode ? '长度改变描述线应变；原来直角的改变描述切应变。位移、线应变与切应变不能混为一谈。' : observation}</p>}
           {lesson.id === 'force' && <p className="foundation-context">一般截面可有轴力 N、剪力 Q、扭矩 T 与弯矩 M。本节纯轴向受拉模型只有 N 非零。</p>}
           </div>
-          <section className="foundation-knowledge" aria-label="基础要点"><h2>基础要点</h2><div className="knowledge-columns">{KNOWLEDGE[lesson.id].map(item => <div key={item.title}><h3>{item.title}</h3><p>{item.description}</p></div>)}</div></section>
+          {lesson.id === 'model' ? <ModelObjectives /> : <section className="foundation-knowledge" aria-label="基础要点"><h2>基础要点</h2><div className="knowledge-columns">{KNOWLEDGE[lesson.id].map(item => <div key={item.title}><h3>{item.title}</h3><p>{item.description}</p></div>)}</div></section>}
         </div>
       </div>
       <div className="foundation-review">
